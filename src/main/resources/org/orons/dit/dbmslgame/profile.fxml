@@ -6,14 +6,14 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="200.0" spacing="18.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.orons.dit.dbmslgame.Profile">
-   <children>
-      <Label text="Welcome Player" />
-      <TextField fx:id="playerNameTextField" alignment="CENTER" promptText="Enter Your Name" VBox.vgrow="NEVER">
-         <VBox.margin>
-            <Insets left="12.0" right="12.0" />
-         </VBox.margin>
-      </TextField>
-      <Button fx:id="readyButton" mnemonicParsing="false" text="READY" />
-   </children>
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="150.0" prefWidth="200.0" spacing="18.0" xmlns="http://javafx.com/javafx/11"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.orons.dit.dbmslgame.Profile">
+   <Label text="Welcome Player"/>
+   <TextField fx:id="playerNameTextField" alignment="CENTER" promptText="Enter Your Name" VBox.vgrow="NEVER">
+      <VBox.margin>
+         <Insets left="12.0" right="12.0"/>
+      </VBox.margin>
+   </TextField>
+   <Button fx:id="readyButton" mnemonicParsing="false" text="READY"/>
 </VBox>

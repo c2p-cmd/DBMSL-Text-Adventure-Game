@@ -39,6 +39,7 @@ public class Profile extends Application implements Runnable, Initializable {
         FXMLLoader loader = new FXMLLoader(Profile.class.getResource("profile.fxml"));
         Scene scene = new Scene(loader.load());
 
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.setMaxWidth(scene.getWidth());
         stage.setMaxHeight(scene.getHeight());
@@ -69,7 +70,6 @@ public class Profile extends Application implements Runnable, Initializable {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("game.fxml")));
             Stage gameStage = (Stage)((Node)event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
-
             gameStage.setScene(scene);
             gameStage.show();
         } catch (IOException e) {
