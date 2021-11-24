@@ -25,7 +25,9 @@
           <Font name="Courier New Bold Italic" size="24.0" />
         </font>
     </Label>
-    <TextArea fx:id="gameTextArea" editable="false" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" promptText="-&gt;This is a portal to a whole new world :-)" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+    <TextArea fx:id="gameTextArea" editable="false" focusTraversable="false" prefHeight="200.0" prefWidth="200.0"
+              promptText="-&gt;This is a portal to a whole new world :-)" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1"
+              style="-fx-control-inner-background: #000000; -fx-highlight-fill: #00ff00; -fx-highlight-text-fill: #000000; -fx-text-fill: #00ff00; ">
         <font>
           <Font name="Courier New" size="14.0" />
         </font>

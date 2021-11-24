@@ -31,6 +31,7 @@ class GameController : Initializable {
     override fun initialize(url: URL?, resourceBundle: ResourceBundle?) {
         typeText("->Welcome $playerName to Text Traveller; today you shall embark upon\n->a new journey!\n->")
         disableButtons(booleanArrayOf(true, true, true, true))
+
     }
 
     private fun disableButtons(b: BooleanArray) {
@@ -60,3 +61,19 @@ class GameController : Initializable {
         timeline.play()
     }
 }
+
+private fun showZombie(): String =
+    ("                           \n" +
+    "          `-:smdhs:`       \n" +
+    "       `+dNNMMMMMMMmo      \n" +
+    "     `:mMMMMMMMMMMMMMh     \n" +
+    "    :mNNmmMMMMMMNmmMMM/    \n" +
+    "    oMs:o/:mMMMs..-:mMo    \n" +
+    "    oM`-h/ oMMM` -dooMo    \n" +
+    "    /Mh:--+NmsNh:-+sNM/    \n" +
+    "     +mMNMMM+:+MMNMMm+     \n" +
+    "      :MMMMNNmNNMMMM:      \n" +
+    "      -MMMd/N-N/dMMM-      \n" +
+    "       +dNmyMoMymNd+       \n" +
+    "         -sdmmmds-         \n" +
+    "                           \n")

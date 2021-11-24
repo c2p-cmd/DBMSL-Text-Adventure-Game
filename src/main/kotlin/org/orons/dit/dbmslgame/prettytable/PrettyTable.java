@@ -6,12 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by salim on 6/1/17.
- */
 public class PrettyTable {
-    private List<String> headers = new ArrayList<>();
-    private List<List<String>> data = new ArrayList<>();
+    private final List<String> headers = new ArrayList<>();
+    private final List<List<String>> data = new ArrayList<>();
 
     public PrettyTable(String... headers) {
         this.headers.addAll(Arrays.asList(headers));
@@ -45,9 +42,7 @@ public class PrettyTable {
         StringBuilder result = new StringBuilder();
         result.append("+");
         for (int i = 0; i < headers.size(); i++) {
-            for (int j = 0; j < getMaxSize(i) + 2; j++) {
-                result.append("-");
-            }
+            result.append("-".repeat(Math.max(0, getMaxSize(i) + 2)));
             result.append("+");
         }
         result.append("\n");
@@ -66,5 +61,10 @@ public class PrettyTable {
         return result.toString();
     }
 
+    public void print() {
+        System.out.println(
+                this
+        );
+    }
 }
 

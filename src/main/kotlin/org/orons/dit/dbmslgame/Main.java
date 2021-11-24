@@ -35,7 +35,7 @@ public class Main extends Application implements Runnable, Initializable {
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("profile.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("player-profile.fxml"));
         Scene scene = new Scene(loader.load());
 
         stage.setResizable(false);
