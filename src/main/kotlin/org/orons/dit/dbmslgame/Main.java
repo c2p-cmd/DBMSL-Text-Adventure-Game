@@ -1,7 +1,6 @@
 package org.orons.dit.dbmslgame;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,7 +19,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class Profile extends Application implements Runnable, Initializable {
+public class Main extends Application implements Runnable, Initializable {
     static String[] args;
 
     @FXML
@@ -30,13 +29,13 @@ public class Profile extends Application implements Runnable, Initializable {
     Button readyButton;
 
     public static void main(String[] args) {
-        Profile.args = args;
-        new Thread(new Profile(), "Player Profile Thread").start();
+        Main.args = args;
+        new Thread(new Main(), "Player Profile Thread").start();
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(Profile.class.getResource("profile.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("profile.fxml"));
         Scene scene = new Scene(loader.load());
 
         stage.setResizable(false);
@@ -49,7 +48,7 @@ public class Profile extends Application implements Runnable, Initializable {
 
     @Override
     public void run() {
-        Application.launch(Profile.args);
+        Application.launch(Main.args);
     }
 
     @Override
@@ -59,8 +58,11 @@ public class Profile extends Application implements Runnable, Initializable {
             if (name == null || name.equalsIgnoreCase("")) {
                 warnUser("Name cannot be empty.");
             } else {
-                PlayerDAO.insertPlayer(name);
-                switchToGame(actionEvent);
+                 if (PlayerDAO.insertPlayer(name))
+                    switchToGame(actionEvent);
+                 else {
+                     warnUser("Name already has been taken.");
+                 }
             }
         });
     }

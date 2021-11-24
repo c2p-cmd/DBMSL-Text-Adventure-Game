@@ -1,23 +1,30 @@
 package org.orons.dit.dbmslgame.jdbc
 
 import java.sql.*
+const val dbURL = "jdbc:sqlite:" +
+        "/home/sharan/VolumeDisk/Code/InternshalaTrainings/DBMSL-Game/src/main/resources/org/orons/dit/dbmslgame/database/adventure_game.db"
 
 object PlayerDAO {
-    private val conn: Connection
-    private lateinit var stmt: Statement
+    private val conn: Connection = DriverManager.getConnection(dbURL)
+    private val stmt: Statement = conn.createStatement()
 
     @JvmStatic
-    fun insertPlayer(name: String) {
-        val query = "INSERT INTO player(name) VALUES(\"$name\");"
-        stmt = conn.createStatement()
-        stmt.executeUpdate(query)
-        stmt.close()
+    fun insertPlayer(name: String): Boolean {
+        return try {
+            val query = "INSERT INTO player(name) VALUES(\"$name\");"
+            val res = stmt.executeUpdate(query)
+            (res > 0)
+        } catch (e: Exception) {
+            println("Error: ${e.message}")
+            false
+        } finally {
+            stmt.close()
+        }
     }
 
     @JvmStatic
     fun showPlayers(): Map<Int, String> {
         val query = "SELECT * FROM player;"
-        stmt = conn.createStatement()
 
         val resultSet = stmt.executeQuery(query)
         val resultMap = mutableMapOf<Int, String>()
@@ -28,17 +35,30 @@ object PlayerDAO {
         return resultMap
     }
 
-    init {
-        val dbURL = "jdbc:sqlite:/home/sharan/VolumeDisk/Code/InternshalaTrainings/DBMSL-Game/src/main/resources/org/orons/dit/dbmslgame/database/adventure_game.db"
-        conn = DriverManager.getConnection(dbURL)
+    @JvmStatic
+    fun clearPlayerTable(): Boolean =
+        stmt.executeUpdate(
+            "DELETE FROM player; DELETE FROM sqlite_sequence WHERE name='player';"
+        ) > 0
+
+    @JvmStatic
+    fun getLatestPlayer(): String? {
+        val query = "SELECT name FROM player ORDER BY pid DESC LIMIT 1;"
+
+        val resultSet = stmt.executeQuery(query)
+        if (resultSet.next()) {
+            return resultSet.getString("name")
+        }
+        stmt.close()
+        return null
     }
 }
 
-fun main() {
+private fun main() {
     println("------------------")
     println("|PID\t|\tNAME\t\t|")
-    for ((pid, name) in PlayerDAO.showPlayers()) {
-        println("|$pid\t|\t$name\t\t|")
+    for (player in PlayerDAO.showPlayers()) {
+        println(player)
     }
     println("------------------")
 }

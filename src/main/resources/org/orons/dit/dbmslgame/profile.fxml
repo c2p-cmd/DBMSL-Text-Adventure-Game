@@ -8,7 +8,7 @@
 
 <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       prefHeight="150.0" prefWidth="200.0" spacing="18.0" xmlns="http://javafx.com/javafx/11"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.orons.dit.dbmslgame.Profile">
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.orons.dit.dbmslgame.Main">
    <Label text="Welcome Player"/>
    <TextField fx:id="playerNameTextField" alignment="CENTER" promptText="Enter Your Name" VBox.vgrow="NEVER">
       <VBox.margin>
