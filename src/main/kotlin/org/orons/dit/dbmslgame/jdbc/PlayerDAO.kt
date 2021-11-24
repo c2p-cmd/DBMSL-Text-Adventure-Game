@@ -55,10 +55,6 @@ object PlayerDAO {
     }
 }
 
-fun PrettyTable.print() {
-    println(this.toString())
-}
-
 private fun main() {
     PrettyTable("pid","name").let { prettyTable ->
         for ((pid, name) in PlayerDAO.showPlayers()) {
