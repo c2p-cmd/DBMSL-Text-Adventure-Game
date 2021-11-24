@@ -1,5 +1,6 @@
 package org.orons.dit.dbmslgame.jdbc
 
+import org.orons.dit.dbmslgame.prettytable.PrettyTable
 import java.sql.*
 const val dbURL = "jdbc:sqlite:" +
         "/home/sharan/VolumeDisk/Code/InternshalaTrainings/DBMSL-Game/src/main/resources/org/orons/dit/dbmslgame/database/adventure_game.db"
@@ -54,11 +55,15 @@ object PlayerDAO {
     }
 }
 
+fun PrettyTable.print() {
+    println(this.toString())
+}
+
 private fun main() {
-    println("------------------")
-    println("|PID\t|\tNAME\t\t|")
-    for (player in PlayerDAO.showPlayers()) {
-        println(player)
+    PrettyTable("pid","name").let { prettyTable ->
+        for ((pid, name) in PlayerDAO.showPlayers()) {
+            prettyTable.addRow(pid.toString(), name)
+        }
+        prettyTable.print()
     }
-    println("------------------")
 }
