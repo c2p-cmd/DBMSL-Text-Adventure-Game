@@ -53,5 +53,6 @@
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.10" level="project" />
     <orderEntry type="library" name="xerial.sqlite.jdbc" level="project" />
     <orderEntry type="library" name="apache.commons.lang3" level="project" />
+    <orderEntry type="library" name="junit.jupiter.api" level="project" />
   </component>
 </module>

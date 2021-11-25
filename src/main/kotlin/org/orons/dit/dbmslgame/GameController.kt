@@ -3,6 +3,7 @@ package org.orons.dit.dbmslgame
 import javafx.animation.Animation
 import javafx.animation.KeyFrame
 import javafx.animation.Timeline
+import javafx.application.Platform
 
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
@@ -15,10 +16,42 @@ import org.orons.dit.dbmslgame.jdbc.PlayerDAO
 
 import java.net.URL
 import java.util.*
-
-private val playerName = "\'${PlayerDAO.getLatestPlayer()}\'"
+import kotlin.system.exitProcess
 
 class GameController : Initializable {
+    inner class Player(
+        val name: String,
+    ) {
+        var playerHP = 10
+            set(value) {
+                field = value
+                if (field <= 0)
+                    gameOver()
+            }
+        var manHP = 15
+
+        var weapon = "Fist"
+
+        override fun toString(): String =
+            buildString {
+                append("Name   : $name\n")
+                append("Weapon : $weapon")
+            }
+
+        fun getStats(): String = buildString {
+            append("$name HP=$playerHP\n")
+            append("Man HP=$manHP")
+        }
+
+        fun resetValues() {
+            playerHP = 10
+            manHP = 15
+            weapon = "Fist"
+        }
+    }
+
+    val player = Player("\'${PlayerDAO.getLatestPlayer()}\'")
+
     @FXML // TextArea
     lateinit var gameTextArea: TextArea
 
@@ -29,12 +62,13 @@ class GameController : Initializable {
     lateinit var option4Button: Button
 
     override fun initialize(url: URL?, resourceBundle: ResourceBundle?) {
-        typeText("->Welcome $playerName to Text Traveller; today you shall embark upon\n->a new journey!\n->")
+        gameTextArea.appendText("->Welcome ${player.name} to Text Traveller; today you shall embark upon\n->a new journey!\n")
         disableButtons(booleanArrayOf(true, true, true, true))
 
+        townGate()
     }
 
-    private fun disableButtons(b: BooleanArray) {
+    fun disableButtons(b: BooleanArray) {
         val (b1, b2, b3, b4) = b
         option1Button.isDisable = b1
         option2Button.isDisable = b2
@@ -42,14 +76,17 @@ class GameController : Initializable {
         option4Button.isDisable = b4
     }
 
-    private fun typeText(text: String) {
+    fun typeText(text: String) {
+        gameTextArea.appendText("\n")
         // variables
         var itr = 0
         val timeline = Timeline()
         val keyFrame = KeyFrame(
-            Duration.seconds(0.05), {
-                if (itr+1 > text.length)
+            Duration.seconds(0.01), {
+                if (itr+1 > text.length) {
                     timeline.stop()
+                    gameTextArea.appendText("\n")
+                }
                 else {
                     gameTextArea.appendText(text.substring(itr, itr+1))
                     itr++
@@ -62,18 +99,11 @@ class GameController : Initializable {
     }
 }
 
-private fun showZombie(): String =
-    ("                           \n" +
-    "          `-:smdhs:`       \n" +
-    "       `+dNNMMMMMMMmo      \n" +
-    "     `:mMMMMMMMMMMMMMh     \n" +
-    "    :mNNmmMMMMMMNmmMMM/    \n" +
-    "    oMs:o/:mMMMs..-:mMo    \n" +
-    "    oM`-h/ oMMM` -dooMo    \n" +
-    "    /Mh:--+NmsNh:-+sNM/    \n" +
-    "     +mMNMMM+:+MMNMMm+     \n" +
-    "      :MMMMNNmNNMMMM:      \n" +
-    "      -MMMd/N-N/dMMM-      \n" +
-    "       +dNmyMoMymNd+       \n" +
-    "         -sdmmmds-         \n" +
-    "                           \n")
+fun GameController.setButtonText(options: List<String>) {
+    option1Button.text = options[0]
+    option2Button.text = options[1]
+    option3Button.text = options[2]
+    option4Button.text = options[3]
+}
+
+fun quitGame(): Nothing = exitProcess(0)
