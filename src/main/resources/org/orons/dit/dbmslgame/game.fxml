@@ -8,34 +8,30 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400" minWidth="600"
-          nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11"
-          xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.orons.dit.dbmslgame.GameController">
+<GridPane alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.orons.dit.dbmslgame.GameController">
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="307.0" minWidth="10.0" prefWidth="302.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="303.0" minWidth="10.0" prefWidth="298.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="419.0" minWidth="10.0" prefWidth="326.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="324.0" minWidth="10.0" prefWidth="324.0" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="128.0" minHeight="0.0" prefHeight="12.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="267.0" minHeight="10.0" prefHeight="253.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="93.0" minHeight="10.0" prefHeight="89.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="112.0" minHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="329.0" minHeight="139.0" prefHeight="278.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="98.0" minHeight="26.0" prefHeight="77.0" vgrow="SOMETIMES" />
     </rowConstraints>
-    <Label alignment="CENTER" text="Welcome To Text Traveller" textAlignment="CENTER" GridPane.columnSpan="2" GridPane.halignment="CENTER">
+    <Label alignment="CENTER" prefHeight="28.0" prefWidth="654.0" text="Welcome To Text Traveller" textAlignment="CENTER" GridPane.columnSpan="2" GridPane.halignment="CENTER">
         <font>
           <Font name="Courier New Bold Italic" size="24.0" />
         </font>
     </Label>
-    <TextArea fx:id="gameTextArea" editable="false" focusTraversable="false" prefHeight="200.0" prefWidth="200.0"
-              promptText="-&gt;This is a portal to a whole new world :-)" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1"
-              style="-fx-control-inner-background: #000000; -fx-highlight-fill: #00ff00; -fx-highlight-text-fill: #000000; -fx-text-fill: #00ff00; ">
+    <TextArea fx:id="gameTextArea" editable="false" focusTraversable="false" prefHeight="0.0" prefWidth="70.0" promptText="-&gt;This is a portal to a whole new world :-)" style="-fx-control-inner-background: #000000; -fx-highlight-fill: #00ff00; -fx-highlight-text-fill: #000000; -fx-text-fill: #00ff00;" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
         <font>
           <Font name="Courier New" size="14.0" />
         </font>
     </TextArea>
     <GridPane alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="408.0" minWidth="10.0" prefWidth="309.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="313.0" minWidth="10.0" prefWidth="301.0" />
         </columnConstraints>
         <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />

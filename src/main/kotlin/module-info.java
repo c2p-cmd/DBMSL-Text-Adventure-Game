@@ -6,6 +6,7 @@ module org.orons.dit.dbmslgame {
     requires org.controlsfx.controls;
     requires java.sql;
     requires org.apache.commons.lang3;
+    requires org.junit.jupiter.api;
 
     opens org.orons.dit.dbmslgame to javafx.fxml;
     exports org.orons.dit.dbmslgame;
