@@ -3,7 +3,7 @@ package org.orons.dit.dbmslgame
 import org.orons.dit.dbmslgame.jdbc.*
 
 // private fun String.getNextID() = this.substring(this.length-2, this.length).toInt()
-// fun String.getQuery() = this.substring(0, this.length-2)
+fun String.getOption() = this.substring(0, this.length-3)
 
 fun GameController.townGate(): Unit = PlayerDAO.getGameQueryAt(1).
     let { map ->
@@ -16,10 +16,10 @@ fun GameController.townGate(): Unit = PlayerDAO.getGameQueryAt(1).
 
         setButtonText(
             listOf(
-                "Talk To Guard.",
-                "Slap The Guard.",
-                "Try Sneaking.",
-                "Leave."
+                (map[OP1]?:"N/A").getOption(),
+                (map[OP2]?:"N/A").getOption(),
+                (map[OP3]?:"N/A").getOption(),
+                (map[OP4]?:"N/A").getOption()
             )
         )
 
@@ -27,8 +27,12 @@ fun GameController.townGate(): Unit = PlayerDAO.getGameQueryAt(1).
             talkToGuard()
         }
         option2Button.setOnAction {
-            typeText("Guard: Hey don't be stupid.\nThe guard hit you so hard and you gave up.(You receive 1 damage)")
+            typeText("Guard: Hey don't be stupid.\nThe guard hit you so hard and you gave up.(You receive 1 damage)\n${player.name}'s HP=${player.playerHP}")
             this.player.playerHP--
+            if (player.isDead()) {
+                gameOver()
+                return@setOnAction
+            }
         }
         option3Button.setOnAction {
             gameOver()
@@ -41,18 +45,22 @@ fun GameController.townGate(): Unit = PlayerDAO.getGameQueryAt(1).
 private fun GameController.talkToGuard(): Unit = PlayerDAO.getGameQueryAt(2).
         let { map ->
             disableButtons(booleanArrayOf(false, true, true, true))
-            val desc = map[DESC]!!.replace("\"your_name\"", this.player.name).split("""\n""")
+            val desc = buildString {
+                for (s in map[DESC]!!.replace("\"your_name\"", player.name).split("""\n"""))
+                    append("$s\n")
+            }
 
             typeText("->$desc")
 
             setButtonText(
                 listOf(
-                    "Leave",
-                    "N/A",
-                    "N/A",
-                    "N/A"
+                    (map[OP1]?:"N/A").getOption(),
+                    (map[OP2]?:"N/A").getOption(),
+                    (map[OP3]?:"N/A").getOption(),
+                    (map[OP4]?:"N/A").getOption()
                 )
             )
+
             option1Button.setOnAction {
                 crossRoad()
             }
@@ -70,10 +78,10 @@ private fun GameController.crossRoad(): Unit = PlayerDAO.getGameQueryAt(4).
 
         setButtonText(
             listOf(
-                "Go North",
-                "Go East",
-                "Go South",
-                "Go West"
+                (map[OP1]?:"N/A").getOption(),
+                (map[OP2]?:"N/A").getOption(),
+                (map[OP3]?:"N/A").getOption(),
+                (map[OP4]?:"N/A").getOption()
             )
         )
         option1Button.setOnAction {
@@ -97,7 +105,7 @@ private fun GameController.goToRiver(): Unit = PlayerDAO.getGameQueryAt(5).
                     append("$s\n")
                 append("${player.name}'s HP = ${++player.playerHP}")
             }
-            println(desc)
+
             gameTextArea.appendText("\n->$desc")
 
             crossRoad()
@@ -127,10 +135,10 @@ private fun GameController.paleMan(): Unit = PlayerDAO.getGameQueryAt(7).
 
             setButtonText(
                 listOf(
-                    "Walk towards him",
-                    "Walk away",
-                    "N/A",
-                    "N/A"
+                    (map[OP1]?:"N/A").getOption(),
+                    (map[OP2]?:"N/A").getOption(),
+                    (map[OP3]?:"N/A").getOption(),
+                    (map[OP4]?:"N/A").getOption()
                 )
             )
 
@@ -153,10 +161,10 @@ private fun GameController.walkTowardsPaleMan(): Unit = PlayerDAO.getGameQueryAt
 
             setButtonText(
                 listOf(
-                    "Fight Pale Man",
-                    "Run",
-                    "N/A",
-                    "N/A"
+                    (map[OP1]?:"N/A").getOption(),
+                    (map[OP2]?:"N/A").getOption(),
+                    (map[OP3]?:"N/A").getOption(),
+                    (map[OP4]?:"N/A").getOption()
                 )
             )
 
@@ -171,7 +179,7 @@ private fun GameController.walkTowardsPaleMan(): Unit = PlayerDAO.getGameQueryAt
 private fun GameController.attackPaleMan() {
         disableButtons(booleanArrayOf(false, false, true, true))
         val desc = player.getStats()
-        typeText("->$desc")
+        gameTextArea.appendText("->$desc")
 
         setButtonText(
             listOf(
@@ -184,7 +192,13 @@ private fun GameController.attackPaleMan() {
 
         option1Button.setOnAction {
             val damageToPlayer = (1..4).random()
+            // println("Damage to player=$damageToPlayer")
             this.player.playerHP -= damageToPlayer
+
+            if (player.isDead()) {
+                gameOver()
+                return@setOnAction
+            }
 
             var damageToMan = 0
             when (player.weapon) {
@@ -194,13 +208,13 @@ private fun GameController.attackPaleMan() {
                 "Machete" -> {
                     damageToMan = (1..5).random()
                 }
-                "Viking Battle Axe" -> {
+                "Viking Battle Axes" -> {
                     damageToMan = (1..8).random()
                 }
             }
             player.manHP -= damageToMan
-            gameTextArea.appendText("Damage to\nPlayer: $damageToPlayer\nMan: $damageToMan")
-            println("Weapon = ${player.weapon}, damage = $damageToMan, manHP = ${player.manHP}, playerHP = ${player.playerHP}")
+            gameTextArea.appendText("\nDamage to\n Player: $damageToPlayer\n Man: $damageToMan\n")
+            // println("Weapon = ${player.weapon}, damage = $damageToMan, manHP = ${player.manHP}, playerHP = ${player.playerHP}")
             if (player.manHP <= 0 && player.playerHP > 0) {
                 monsterKilled()
             }
@@ -214,8 +228,7 @@ private fun GameController.attackPaleMan() {
         }
     }
 
-private fun GameController.monsterKilled(): Unit = PlayerDAO.getGameQueryAt(12).
-        let {
+private fun GameController.monsterKilled() {
             disableButtons(booleanArrayOf(false, true, true, true))
             val desc = "You killed the monster!\n" +
                         "The monster dropped a shiny object!\n" +
@@ -252,10 +265,10 @@ private fun GameController.followGuard(): Unit = PlayerDAO.getGameQueryAt(13).
 
             setButtonText(
                 listOf(
-                    "Drink",
-                    "N/A",
-                    "N/A",
-                    "N/A"
+                    (map[OP1]?:"N/A").getOption(),
+                    (map[OP2]?:"N/A").getOption(),
+                    (map[OP3]?:"N/A").getOption(),
+                    (map[OP4]?:"N/A").getOption()
                 )
             )
             option1Button.setOnAction {
@@ -277,10 +290,10 @@ private fun GameController.wakeUpInRoom(): Unit = PlayerDAO.getGameQueryAt(14).
 
             setButtonText(
                 listOf(
-                    "Look Further",
-                    "Leave the room",
-                    "N/A",
-                    "N/A"
+                    (map[OP1]?:"N/A").getOption(),
+                    (map[OP2]?:"N/A").getOption(),
+                    (map[OP3]?:"N/A").getOption(),
+                    (map[OP4]?:"N/A").getOption()
                 )
             )
             option1Button.setOnAction {
@@ -302,16 +315,20 @@ private fun GameController.checkDoor(): Unit = PlayerDAO.getGameQueryAt(15).
 
             setButtonText(
                 listOf(
-                    "Hit the door",
-                    "Leave the room",
-                    "N/A",
-                    "N/A"
+                    (map[OP1]?:"N/A").getOption(),
+                    (map[OP2]?:"N/A").getOption(),
+                    (map[OP3]?:"N/A").getOption(),
+                    (map[OP4]?:"N/A").getOption()
                 )
             )
             option1Button.setOnAction {
                 typeText("Door doesn't open.")
                 this.player.playerHP--
-                gameTextArea.appendText("You receive 1 damage ${player.playerHP}")
+                if (player.isDead()) {
+                    gameOver()
+                    return@setOnAction
+                }
+                gameTextArea.appendText("You receive 1 damage ${player.name}'s HP=${player.playerHP}\n")
             }
             option2Button.setOnAction {
                 leaveRoom()
@@ -329,10 +346,10 @@ private fun GameController.leaveRoom(): Unit = PlayerDAO.getGameQueryAt(16).
 
             setButtonText(
                 listOf(
-                    "Talk to merchant",
-                    "N/A",
-                    "N/A",
-                    "N/A"
+                    (map[OP1]?:"N/A").getOption(),
+                    (map[OP2]?:"N/A").getOption(),
+                    (map[OP3]?:"N/A").getOption(),
+                    (map[OP4]?:"N/A").getOption()
                 )
             )
             option1Button.setOnAction {
@@ -351,10 +368,10 @@ private fun GameController.questionMerchant(): Unit = PlayerDAO.getGameQueryAt(1
 
             setButtonText(
                 listOf(
-                    "What is this place?",
-                    "N/A",
-                    "N/A",
-                    "N/A"
+                    (map[OP1]?:"N/A").getOption(),
+                    (map[OP2]?:"N/A").getOption(),
+                    (map[OP3]?:"N/A").getOption(),
+                    (map[OP4]?:"N/A").getOption()
                 )
             )
             option1Button.setOnAction { continueConversation() }
@@ -372,10 +389,10 @@ private fun GameController.continueConversation(): Unit = PlayerDAO.getGameQuery
 
             setButtonText(
                 listOf(
-                    "Fight",
-                    "Run",
-                    "N/A",
-                    "N/A"
+                    (map[OP1]?:"N/A").getOption(),
+                    (map[OP2]?:"N/A").getOption(),
+                    (map[OP3]?:"N/A").getOption(),
+                    (map[OP4]?:"N/A").getOption()
                 )
             )
             option1Button.setOnAction { gameOver() }
@@ -393,10 +410,10 @@ private fun GameController.runBackUp(): Unit = PlayerDAO.getGameQueryAt(21).
 
             setButtonText(
                 listOf(
-                    "Open Door",
-                    "Fight the man",
-                    "N/A",
-                    "N/A"
+                    (map[OP1]?:"N/A").getOption(),
+                    (map[OP2]?:"N/A").getOption(),
+                    (map[OP3]?:"N/A").getOption(),
+                    (map[OP4]?:"N/A").getOption()
                 )
             )
             option1Button.setOnAction { openDoor() }
@@ -414,10 +431,10 @@ private fun GameController.openDoor(): Unit = PlayerDAO.getGameQueryAt(22).
 
             setButtonText(
                 listOf(
-                    "Look for supplies",
-                    "N/A",
-                    "N/A",
-                    "N/A"
+                    (map[OP1]?:"N/A").getOption(),
+                    (map[OP2]?:"N/A").getOption(),
+                    (map[OP3]?:"N/A").getOption(),
+                    (map[OP4]?:"N/A").getOption()
                 )
             )
             option1Button.setOnAction {
@@ -445,9 +462,14 @@ private fun GameController.endingScene() {
             option2Button.setOnAction {
                 player.playerHP += 5
                 val damage = (0..player.playerHP).random()
-                typeText("You recover 5HP and now, the man attacks you and gives $damage damage.")
+                gameTextArea.appendText("You recover 5HP and now, the man attacks you and gives $damage damage.")
                 player.playerHP -= damage
-                youWin()
+                if (player.isDead()) {
+                    gameOver()
+                    return@setOnAction
+                } else {
+                    youWin()
+                }
             }
         }
 

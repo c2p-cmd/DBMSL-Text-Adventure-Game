@@ -64,43 +64,19 @@ object PlayerDAO {
         }
 
     @JvmStatic
-    fun getGameQueries(): List<List<String?>> =
-        mutableListOf<List<String?>>().let { list ->
-            stmt.executeQuery(
-                "SELECT * FROM game_queries;"
-            ).let { resultSet ->
-                while (resultSet.next()) {
-                    val id = resultSet.getInt(ID).toString()
-                    val description = resultSet.getString(DESC)
-                    val opt1 = resultSet.getString(OP1)
-                    val opt2 = resultSet.getString(OP2)
-                    val opt3 = resultSet.getString(OP3)
-                    val opt4 = resultSet.getString(OP4)
-                    list.add(
-                        listOf(id, description, opt1, opt2, opt3, opt4)
-                    )
-                }
-                resultSet.close()
-            }
-            stmt.close()
-            return list
-        }
-
-    @JvmStatic
-    fun getGameQueryAt(i: Int): Map<String, String?> =
+    fun getGameQueryAt(i: Int): Map<String, String> =
         stmt.executeQuery(
-            "SELECT * FROM game_queries WHERE id=$i;"
+            "SELECT q.$DESC, ops.$OP1, ops.$OP2, ops.$OP3, ops.$OP4 FROM game_queries q JOIN game_options ops ON q.id=ops.id WHERE q.id=$i;"
         ).let { resultSet ->
-            while (resultSet.next()) {
-                return mapOf<String, String?> (
+            if (resultSet.next()) {
+                return mapOf(
                     Pair(DESC, resultSet.getString(DESC)),
-                    Pair(OP1, resultSet.getString(OP1)),
-                    Pair(OP2, resultSet.getString(OP2)),
-                    Pair(OP3, resultSet.getString(OP3)),
-                    Pair(OP4, resultSet.getString(OP4))
+                    Pair(OP1, resultSet.getString(OP1)?: "N/A"),
+                    Pair(OP2, resultSet.getString(OP2)?: "N/A"),
+                    Pair(OP3, resultSet.getString(OP3)?: "N/A"),
+                    Pair(OP4, resultSet.getString(OP4)?: "N/A")
                 )
             }
-            resultSet.close()
             return mapOf()
         }
 
@@ -116,30 +92,5 @@ private fun main() {
 
     println(PlayerDAO.getLatestPlayer())
 
-    PlayerDAO.getGameQueries().let { allQueries ->
-        val q1 = allQueries[0]
-        val id = q1[0]
-        val desc = q1[1]
-        desc?.split("""\n""")?.let { d ->
-            for (c in d) {
-                println(c)
-            }
-        }
 
-        val op1 = q1[2]
-        if (op1 != null) {
-            val nextId = op1.substring(
-                (op1.length - 2), (op1.length)
-            ).toInt()
-            val option1Query = op1.substring(
-                0, op1.length-2
-            )
-            println("nextID = $nextId")
-            println(PlayerDAO.getGameQueryAt(nextId)[DESC]?.replace("\"your_name\"", "Sharan"))
-        }
-
-        val op2 = q1[3]
-        val op3 = q1[4]
-        val op4 = q1[5]
-    }
 }

@@ -23,19 +23,16 @@ class GameController : Initializable {
         val name: String,
     ) {
         var playerHP = 10
-            set(value) {
-                field = value
-                if (field <= 0)
-                    gameOver()
-            }
         var manHP = 15
 
         var weapon = "Fist"
 
+        fun isDead(): Boolean = playerHP <= 0
+
         override fun toString(): String =
             buildString {
                 append("Name   : $name\n")
-                append("Weapon : $weapon")
+                append("Weapon : $weapon\n")
             }
 
         fun getStats(): String = buildString {
