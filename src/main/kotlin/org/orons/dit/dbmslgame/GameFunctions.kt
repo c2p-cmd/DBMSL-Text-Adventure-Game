@@ -1,13 +1,16 @@
 package org.orons.dit.dbmslgame
 
+import javafx.application.Platform
+import org.orons.dit.dbmslgame.audio.MusicHandler
 import org.orons.dit.dbmslgame.jdbc.*
+import kotlin.concurrent.thread
 
 // private fun String.getNextID() = this.substring(this.length-2, this.length).toInt()
 fun String.getOption() = this.substring(0, this.length-3)
 
 fun GameController.townGate(): Unit = PlayerDAO.getGameQueryAt(1).
     let { map ->
-        disableButtons(booleanArrayOf(false, false, false, false))
+        disableButtons(booleanArrayOf(false,false,false,false))
         val desc = buildString {
             for (s in map[DESC]!!.split("""\n"""))
                 append("$s\n")
@@ -492,11 +495,17 @@ fun GameController.youWin() {
 }
 
 fun GameController.showZombie(): String {
+    Platform.runLater {
+        MusicHandler.playGameOverSound()
+    }
+
     disableButtons(booleanArrayOf(false, false, true, true))
     setButtonText(listOf("Retry?","Quit","N/A","N/A"))
+
     option1Button.setOnAction {
         player.resetValues()
         gameTextArea.clear()
+        MusicHandler.playBackgroundScore()
         townGate()
     }
     option2Button.setOnAction {

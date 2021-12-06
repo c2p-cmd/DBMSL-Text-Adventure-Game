@@ -11,7 +11,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.orons.dit.dbmslgame.audio.MusicHandler;
 import org.orons.dit.dbmslgame.jdbc.PlayerDAO;
 
 import java.io.IOException;
@@ -36,7 +40,15 @@ public class Main extends Application implements Runnable, Initializable {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("player-profile.fxml"));
+
         Scene scene = new Scene(loader.load());
+        scene.getStylesheets().add(
+            Objects.requireNonNull(
+                    Main.class.getResource("button.css")
+            ).toExternalForm()
+        );
+
+        new Thread(MusicHandler::playBackgroundScore).start();
 
         stage.setResizable(false);
         stage.setScene(scene);
@@ -58,10 +70,14 @@ public class Main extends Application implements Runnable, Initializable {
             if (name == null || name.equalsIgnoreCase("")) {
                 warnUser("Name cannot be empty.");
             } else {
-                 if (PlayerDAO.insertPlayer(name))
-                    switchToGame(actionEvent);
-                 else {
-                     warnUser("Name already has been taken.");
+                 try {
+                     if (PlayerDAO.insertPlayer(name))
+                         switchToGame(actionEvent);
+                     else {
+                         warnUser("Name already has been taken.");
+                     }
+                 } catch (Exception e) {
+                     warnUser(e.getMessage());
                  }
             }
         });
@@ -71,7 +87,14 @@ public class Main extends Application implements Runnable, Initializable {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("game.fxml")));
             Stage gameStage = (Stage)((Node)event.getSource()).getScene().getWindow();
+
             Scene scene = new Scene(root);
+            scene.getStylesheets().add(
+                    Objects.requireNonNull(
+                            Main.class.getResource("button.css")
+                    ).toExternalForm()
+            );
+
             gameStage.setScene(scene);
             gameStage.show();
         } catch (IOException e) {

@@ -7,6 +7,7 @@ module org.orons.dit.dbmslgame {
     requires java.sql;
     requires org.apache.commons.lang3;
     requires org.junit.jupiter.api;
+    requires javafx.media;
 
     opens org.orons.dit.dbmslgame to javafx.fxml;
     exports org.orons.dit.dbmslgame;

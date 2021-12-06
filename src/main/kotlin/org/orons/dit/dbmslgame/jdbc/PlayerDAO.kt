@@ -2,6 +2,8 @@ package org.orons.dit.dbmslgame.jdbc
 
 import org.orons.dit.dbmslgame.prettytable.PrettyTable
 import java.sql.*
+import java.util.*
+
 const val dbURL = "jdbc:sqlite:" +
         "/home/sharan/VolumeDisk/Code/InternshalaTrainings/DBMSL-Game/src/main/resources/org/orons/dit/dbmslgame/database/adventure_game.db"
 
@@ -12,13 +14,18 @@ const val OP2 = "option2"
 const val OP3 = "option3"
 const val OP4 = "option4"
 
+private val PUNCTUATIONS = "\'\".!,:;[]{}_/\\".toCharArray()
+
 object PlayerDAO {
     private val conn: Connection = DriverManager.getConnection(dbURL)
     private val stmt: Statement = conn.createStatement()
 
     @JvmStatic
-    fun insertPlayer(name: String): Boolean =
-        try {
+    fun insertPlayer(name: String): Boolean {
+        if (PUNCTUATIONS.any { c -> name.contains(c)}) {
+            throw IllegalArgumentException("Punctuations now allowed in player name!")
+        }
+        return try {
             stmt.executeUpdate(
                 "INSERT INTO player(name) VALUES(\"$name\");"
             ) > 0
@@ -27,6 +34,7 @@ object PlayerDAO {
         } finally {
             stmt.close()
         }
+    }
 
 
     @JvmStatic
@@ -66,7 +74,11 @@ object PlayerDAO {
     @JvmStatic
     fun getGameQueryAt(i: Int): Map<String, String> =
         stmt.executeQuery(
-            "SELECT q.$DESC, ops.$OP1, ops.$OP2, ops.$OP3, ops.$OP4 FROM game_queries q JOIN game_options ops ON q.id=ops.id WHERE q.id=$i;"
+            "SELECT " +
+                    "q.$DESC, ops.$OP1, ops.$OP2, ops.$OP3, ops.$OP4 " +
+                    "FROM game_queries q " +
+                    "JOIN game_options ops ON q.id=ops.id " +
+                    "WHERE q.id=$i;"
         ).let { resultSet ->
             if (resultSet.next()) {
                 return mapOf(
@@ -77,6 +89,8 @@ object PlayerDAO {
                     Pair(OP4, resultSet.getString(OP4)?: "N/A")
                 )
             }
+
+
             return mapOf()
         }
 
@@ -91,6 +105,4 @@ private fun main() {
     }
 
     println(PlayerDAO.getLatestPlayer())
-
-
 }
