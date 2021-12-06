@@ -56,7 +56,6 @@ public class MusicHandler {
             backgroundScore.stop();
         }
         MediaPlayer.Status status = gameOverSound.getStatus();
-        System.out.println("status = " + status);
         if (status.equals(MediaPlayer.Status.STOPPED) || status.equals(MediaPlayer.Status.READY)) {
             gameOverSound.play();
         }

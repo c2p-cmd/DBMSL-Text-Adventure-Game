@@ -50,6 +50,7 @@ public class Main extends Application implements Runnable, Initializable {
 
         new Thread(MusicHandler::playBackgroundScore).start();
 
+        stage.setTitle("Player Name");
         stage.setResizable(false);
         stage.setScene(scene);
         stage.setMaxWidth(scene.getWidth());
